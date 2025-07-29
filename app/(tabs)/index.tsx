@@ -2,6 +2,7 @@ import { createHomeStyles } from "@/assets/styles/home.styles";
 import { api } from "@/convex/_generated/api";
 import useTheme from "@/hooks/useTheme";
 import { useMutation, useQuery } from "convex/react";
+import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,24 +22,27 @@ export default function Index() {
   
 
   return (
+    <LinearGradient colors={colors.gradients.background} style={homeStyles.container}>
+
     <SafeAreaView style={homeStyles.safeArea}>
       <Text style={homeStyles.loadingText}>
         Edit app/index.tsx to edit this screen123.
       </Text>
-      <Text>Helloooo</Text>
+      <Text style={homeStyles.loadingText}>Helloooo</Text>
       <Link href="/about">Visit la page about</Link>
       <TouchableOpacity onPress={toggleDarkMode}>
-        <Text>Toggle Dark Mode</Text>
+        <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
       </TouchableOpacity>
       {/* <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
       
-        <Text>Add a new TODO</Text>
+      <Text>Add a new TODO</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={()=> clearAllTodos()}>;
       
-        <Text>Clear all the todos</Text>
+      <Text>Clear all the todos</Text>
       </TouchableOpacity> */}
     </SafeAreaView>
+  </LinearGradient>
   );
 }
 
