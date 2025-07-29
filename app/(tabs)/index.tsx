@@ -11,6 +11,7 @@ export default function Index() {
   console.log("Todos:", todos);
 
   const addTodo = useMutation(api.todos.addTodo)
+  const clearAllTodos = useMutation(api.todos.clearAllTodos);
   
 
   return (
@@ -23,10 +24,14 @@ export default function Index() {
       <TouchableOpacity onPress={toggleDarkMode}>
         <Text>Toggle Dark Mode</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
+      {/* <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
       
         <Text>Add a new TODO</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={()=> clearAllTodos()}>;
+      
+        <Text>Clear all the todos</Text>
+      </TouchableOpacity> */}
     </View>
   );
 }
