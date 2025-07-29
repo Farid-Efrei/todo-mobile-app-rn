@@ -40,7 +40,7 @@ export const deleteTodo = mutation({
   }
 })
 
-const updateTodo = mutation({
+export const updateTodo = mutation({
   args: {
     id: v.id("todos"),
     text: v.string(),
@@ -49,12 +49,12 @@ const updateTodo = mutation({
     await ctx.db.patch(args.id, {
       text: args.text
     })
-  } 
-}) 
+  },
+})
 
 export const clearAllTodos = mutation({
 handler: async (ctx) => {
-  const todos = await.ctx.db.query("todos").collect()
+  const todos = await ctx.db.query("todos").collect();
 
   // Delete all todos
   for (const todo of todos){
