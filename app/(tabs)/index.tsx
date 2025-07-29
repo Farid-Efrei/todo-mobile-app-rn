@@ -1,4 +1,5 @@
 import { createHomeStyles } from "@/assets/styles/home.styles";
+import Header from "@/components/Header";
 import { api } from "@/convex/_generated/api";
 import useTheme from "@/hooks/useTheme";
 import { useMutation, useQuery } from "convex/react";
@@ -26,10 +27,12 @@ export default function Index() {
       <StatusBar barStyle={colors.statusBarStyle} />
 
     <SafeAreaView style={homeStyles.safeArea}>
+
       <Text style={homeStyles.loadingText}>
         Edit app/index.tsx to edit this screen123.
       </Text>
       <Text style={homeStyles.loadingText}>Helloooo</Text>
+      <Header/>
       <Link href="/about">Visit la page about</Link>
       <TouchableOpacity onPress={toggleDarkMode}>
         <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
