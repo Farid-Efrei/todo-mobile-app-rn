@@ -1,5 +1,6 @@
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import Header from "@/components/Header";
+import TodoInput from "@/components/TodoInput";
 import { api } from "@/convex/_generated/api";
 import useTheme from "@/hooks/useTheme";
 import { useMutation, useQuery } from "convex/react";
@@ -33,6 +34,9 @@ export default function Index() {
       </Text>
       <Text style={homeStyles.loadingText}>Helloooo</Text>
       <Header/>
+
+
+      <TodoInput/>
       <Link href="/about">Visit la page about</Link>
       <TouchableOpacity onPress={toggleDarkMode}>
         <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
