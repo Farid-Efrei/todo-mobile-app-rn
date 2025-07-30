@@ -1,14 +1,14 @@
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import Header from "@/components/Header";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoInput from "@/components/TodoInput";
 import { api } from "@/convex/_generated/api";
 import useTheme from "@/hooks/useTheme";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import { StatusBar, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 
 export default function Index() {
   const { toggleDarkMode, colors } = useTheme();
@@ -16,39 +16,43 @@ export default function Index() {
   // const styles = createStyles(colors);
   const homeStyles = createHomeStyles(colors);
 
-  const todos = useQuery(api.todos.getTodos)
+  const todos = useQuery(api.todos.getTodos);
   console.log("Todos:", todos);
 
-  const addTodo = useMutation(api.todos.addTodo)
-  const clearAllTodos = useMutation(api.todos.clearAllTodos);
-  
+  const isLoading = todos === undefined;
+
+  if (isLoading) return <LoadingSpinner />;
+
+  // const addTodo = useMutation(api.todos.addTodo)
+  // const clearAllTodos = useMutation(api.todos.clearAllTodos);
 
   return (
-    <LinearGradient colors={colors.gradients.background} style={homeStyles.container}>
+    <LinearGradient
+      colors={colors.gradients.background}
+      style={homeStyles.container}
+    >
       <StatusBar barStyle={colors.statusBarStyle} />
 
-    <SafeAreaView style={homeStyles.safeArea}>
-
-      <Text style={homeStyles.loadingText}>
-        Edit app/index.tsx to edit this screen123.
-      </Text>
-      <Text style={homeStyles.loadingText}>Helloooo</Text>
-      <Header/>
-
-
-      <TodoInput/>
-
-      {todos?.map((todo) => (
-        <Text key={todo._id} style={homeStyles.todoText}>
-          {todo.text} - {todo.isCompleted ? "Completed" : "Pending"}
+      <SafeAreaView style={homeStyles.safeArea}>
+        <Text style={homeStyles.loadingText}>
+          Edit app/index.tsx to edit this screen123.
         </Text>
-      ))}
-      
-      <Link href="/about">Visit la page about</Link>
-      <TouchableOpacity onPress={toggleDarkMode}>
-        <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
+        <Text style={homeStyles.loadingText}>Helloooo</Text>
+        <Header />
+
+        <TodoInput />
+
+        {todos?.map((todo) => (
+          <Text key={todo._id} style={homeStyles.todoText}>
+            {todo.text} - {todo.isCompleted ? "Completed" : "Pending"}
+          </Text>
+        ))}
+
+        <Link href="/about">Visit la page about</Link>
+        <TouchableOpacity onPress={toggleDarkMode}>
+          <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
       
       <Text>Add a new TODO</Text>
       </TouchableOpacity>
@@ -56,11 +60,10 @@ export default function Index() {
       
       <Text>Clear all the todos</Text>
       </TouchableOpacity> */}
-    </SafeAreaView>
-  </LinearGradient>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
-
 
 // const createStyles = (colors : ColorScheme ) => {
 //   const styles = StyleSheet.create({
