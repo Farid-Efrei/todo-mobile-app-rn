@@ -37,6 +37,13 @@ export default function Index() {
 
 
       <TodoInput/>
+
+      {todos?.map((todo) => (
+        <Text key={todo._id} style={homeStyles.todoText}>
+          {todo.text} - {todo.isCompleted ? "Completed" : "Pending"}
+        </Text>
+      ))}
+      
       <Link href="/about">Visit la page about</Link>
       <TouchableOpacity onPress={toggleDarkMode}>
         <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
