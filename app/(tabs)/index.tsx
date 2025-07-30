@@ -1,4 +1,5 @@
 import { createHomeStyles } from "@/assets/styles/home.styles";
+import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoInput from "@/components/TodoInput";
@@ -150,12 +151,14 @@ export default function Index() {
 
         {/* Version avec FlatList optimisée */}
         <FlatList
-          data={todos}
+          data={[]}
           renderItem={renderTodoItem}
           keyExtractor={(item) => item._id}
           style={homeStyles.todoList}
           contentContainerStyle={homeStyles.todoListContent}
-          // ListEmptyComponent={<EmptyState/>}
+          ListEmptyComponent={<EmptyState />}
+          //Pour ne pas afficher le scroll mais il existe (performance)
+          // showsVerticalScrollIndicator={false}
         />
 
         <Link href="/about">Visit la page about</Link>
