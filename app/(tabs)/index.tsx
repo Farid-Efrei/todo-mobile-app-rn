@@ -126,10 +126,10 @@ export default function Index() {
       <StatusBar barStyle={colors.statusBarStyle} />
 
       <SafeAreaView style={homeStyles.safeArea}>
-        <Text style={homeStyles.loadingText}>
+        {/* <Text style={homeStyles.loadingText}>
           Edit app/index.tsx to edit this screen123.
         </Text>
-        <Text style={homeStyles.loadingText}>Helloooo</Text>
+        <Text style={homeStyles.loadingText}>Helloooo</Text> */}
         <Header />
 
         <TodoInput />
