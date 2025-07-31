@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 const About = () => {
   return (
     <View>
-      <Text>C&apos;est la page about</Text>
+      <Text>Merci d&apos;avoir utilisé mon application !</Text>
     </View>
   );
 };

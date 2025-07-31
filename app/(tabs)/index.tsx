@@ -9,7 +9,6 @@ import useTheme from "@/hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
 import { useMutation, useQuery } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -22,11 +21,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 type Todo = Doc<"todos">;
 
 export default function Index() {
-  const { toggleDarkMode, colors } = useTheme();
+  const { colors } = useTheme();
 
   const [editingId, setEditingId] = useState<Id<"todos"> | null>(null);
   const [editingText, setEditingText] = useState<string>("");
@@ -35,7 +33,7 @@ export default function Index() {
   const homeStyles = createHomeStyles(colors);
 
   const todos = useQuery(api.todos.getTodos);
-  console.log("Todos:", todos);
+  // console.log("Todos:", todos);
 
   const toggleTodo = useMutation(api.todos.toggleTodo);
   const deleteTodo = useMutation(api.todos.deleteTodo);
@@ -46,155 +44,126 @@ export default function Index() {
   if (isLoading) return <LoadingSpinner />;
 
   const handleToggleTodo = async (id: Id<"todos">) => {
-    // Call the API to toggle the todo's completion status
     try {
       await toggleTodo({ todoId: id });
     } catch (error) {
       console.error("Erreur lors du basculement de la tâche: ", error);
       Alert.alert("Erreur", "Echec du basculement de la tâche.");
-      // Optionally, you can show an alert or a toast message to the user
     }
   };
 
   const handleDeleteTodo = async (id: Id<"todos">) => {
-    Alert.alert("Supprimer la tâche", "Êtes-vous sûr de vouloir supprimer cette tâche ?", [
-      {
-        text: "Annuler",
-        style: "cancel",
-      },
-      {
-        text: "Supprimer",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await deleteTodo({ todoId: id });
-          } catch (error) {
-            console.error("Erreur lors de la suppression de la tâche: ", error);
-            Alert.alert("Erreur", "Echec de la suppression de la tâche.");
-          }
+    Alert.alert(
+      "Supprimer la tâche",
+      "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
         },
-      },
-    ])
-  }
+        {
+          text: "Supprimer",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteTodo({ todoId: id });
+            } catch (error) {
+              console.error(
+                "Erreur lors de la suppression de la tâche: ",
+                error
+              );
+              Alert.alert("Erreur", "Echec de la suppression de la tâche.");
+            }
+          },
+        },
+      ]
+    );
+  };
 
   const handleEditTodo = (todo: Todo) => {
     setEditingText(todo.text);
     setEditingId(todo._id);
-  }
+  };
   const handleSave = async () => {
-    if(editingId){
-
+    if (editingId) {
       try {
-        await updateTodo({id: editingId, text: editingText.trim()});
+        await updateTodo({ id: editingId, text: editingText.trim() });
         setEditingId(null);
         setEditingText("");
-        
       } catch (error) {
         console.error("Erreur lors de la sauvegarde de la tâche: ", error);
         Alert.alert("Erreur", "Echec de la sauvegarde de la tâche.");
-        
       }
     }
-    }
+  };
   const handleCancelEdit = (todo: Todo) => {
     setEditingId(null);
     setEditingText("");
-  }
-
+  };
 
   const renderTodoItem = ({ item }: { item: Todo }) => {
     const isEditing = editingId === item._id;
 
-    return(
-
+    return (
       <View style={homeStyles.todoItemWrapper}>
-      <LinearGradient
-        colors={colors.gradients.surface}
-        style={homeStyles.todoItem}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+        <LinearGradient
+          colors={colors.gradients.surface}
+          style={homeStyles.todoItem}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
         >
-        <TouchableOpacity
-          style={homeStyles.checkbox}
-          activeOpacity={0.7}
-          onPress={() => {
-            handleToggleTodo(item._id);
-          }}
-        >
-          <LinearGradient
-            colors={
-              item.isCompleted
-              ? colors.gradients.success
-              : colors.gradients.muted
-            }
-            style={[
-              homeStyles.checkboxInner,
-              { borderColor: item.isCompleted ? "transparent" : colors.border },
-            ]}
+          <TouchableOpacity
+            style={homeStyles.checkbox}
+            activeOpacity={0.7}
+            onPress={() => {
+              handleToggleTodo(item._id);
+            }}
+          >
+            <LinearGradient
+              colors={
+                item.isCompleted
+                  ? colors.gradients.success
+                  : colors.gradients.muted
+              }
+              style={[
+                homeStyles.checkboxInner,
+                {
+                  borderColor: item.isCompleted ? "transparent" : colors.border,
+                },
+              ]}
             >
-            {item.isCompleted && (
-              <Ionicons name="checkmark" size={24} color={colors.text} />
-            )}
-          </LinearGradient>
-        </TouchableOpacity>
+              {item.isCompleted && (
+                <Ionicons name="checkmark" size={24} color={colors.text} />
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
 
-         
-        {/* <View style={homeStyles.todoTextContainer}>
-          <Text
-            style={[
-              homeStyles.todoText,
-              item.isCompleted && {
-                textDecorationLine: "line-through",
-                color: colors.textMuted,
-                opacity: 0.6,
-              },
-            ]}
-            >
-            {item.text}
-          </Text>
-          <View style={homeStyles.todoActions}>
-            <TouchableOpacity onPress={() => {}} activeOpacity={0.8}>
-              <LinearGradient
-                colors={colors.gradients.warning}
-                style={homeStyles.actionButton}
-              >
-                <Ionicons name="pencil" size={16} color="#fff" />
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {handleDeleteTodo(item._id)}} activeOpacity={0.8}>
-              <LinearGradient
-                colors={colors.gradients.danger}
-                style={homeStyles.actionButton}
-                >
-                <Ionicons name="trash" size={16} color="#fff" />
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </View> */}
-
-        {isEditing ? (
-          <View style={homeStyles.editContainer}>
-            <TextInput
-              style={homeStyles.editInput}
-              value={editingText}
-              onChangeText={setEditingText}
-              autoFocus
-              placeholder="Modifier la tâche..."
-              placeholderTextColor={colors.textMuted}
-              multiline
+          {isEditing ? (
+            <View style={homeStyles.editContainer}>
+              <TextInput
+                style={homeStyles.editInput}
+                value={editingText}
+                onChangeText={setEditingText}
+                autoFocus
+                placeholder="Modifier la tâche..."
+                placeholderTextColor={colors.textMuted}
+                multiline
               />
               <View style={homeStyles.editButtons}>
                 <TouchableOpacity onPress={handleSave} activeOpacity={0.8}>
                   <LinearGradient
                     colors={colors.gradients.success}
                     style={homeStyles.editButton}
-                    >
-                      <Ionicons name="checkmark" size={16} color="#fff" />
-                      <Text style={homeStyles.editButtonText}>Sauver</Text>
+                  >
+                    <Ionicons name="checkmark" size={16} color="#fff" />
+                    <Text style={homeStyles.editButtonText}>Sauver</Text>
                   </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => handleCancelEdit(item)} activeOpacity={0.8}>
+                <TouchableOpacity
+                  onPress={() => handleCancelEdit(item)}
+                  activeOpacity={0.8}
+                >
                   <LinearGradient
                     colors={colors.gradients.muted}
                     style={homeStyles.editButton}
@@ -203,52 +172,56 @@ export default function Index() {
                     <Text style={homeStyles.editButtonText}>Annuler</Text>
                   </LinearGradient>
                 </TouchableOpacity>
-
               </View>
-          </View>
-        ) : (
-           <View style={homeStyles.todoTextContainer}>
-          <Text
-            style={[
-              homeStyles.todoText,
-              item.isCompleted && {
-                textDecorationLine: "line-through",
-                color: colors.textMuted,
-                opacity: 0.6,
-              },
-            ]}
-            >
-            {item.text}
-          </Text>
-          <View style={homeStyles.todoActions}>
-            <TouchableOpacity onPress={() => {handleEditTodo(item)}} activeOpacity={0.8}>
-              <LinearGradient
-                colors={colors.gradients.warning}
-                style={homeStyles.actionButton}
+            </View>
+          ) : (
+            <View style={homeStyles.todoTextContainer}>
+              <Text
+                style={[
+                  homeStyles.todoText,
+                  item.isCompleted && {
+                    textDecorationLine: "line-through",
+                    color: colors.textMuted,
+                    opacity: 0.6,
+                  },
+                ]}
               >
-                <Ionicons name="pencil" size={16} color="#fff" />
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {handleDeleteTodo(item._id)}} activeOpacity={0.8}>
-              <LinearGradient
-                colors={colors.gradients.danger}
-                style={homeStyles.actionButton}
+                {item.text}
+              </Text>
+              <View style={homeStyles.todoActions}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleEditTodo(item);
+                  }}
+                  activeOpacity={0.8}
                 >
-                <Ionicons name="trash" size={16} color="#fff" />
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </View> 
-        )}
-
-
-      </LinearGradient>
-    </View>
-)
-};
-  
-  // const addTodo = useMutation(api.todos.addTodo)
-  // const clearAllTodos = useMutation(api.todos.clearAllTodos);
+                  <LinearGradient
+                    colors={colors.gradients.warning}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="pencil" size={16} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleDeleteTodo(item._id);
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <LinearGradient
+                    colors={colors.gradients.danger}
+                    style={homeStyles.actionButton}
+                  >
+                    <Ionicons name="trash" size={16} color="#fff" />
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </LinearGradient>
+      </View>
+    );
+  };
 
   return (
     <LinearGradient
@@ -258,28 +231,9 @@ export default function Index() {
       <StatusBar barStyle={colors.statusBarStyle} />
 
       <SafeAreaView style={homeStyles.safeArea}>
-        {/* <Text style={homeStyles.loadingText}>
-          Edit app/index.tsx to edit this screen123.
-        </Text>
-        <Text style={homeStyles.loadingText}>Helloooo</Text> */}
         <Header />
 
         <TodoInput />
-
-        {/* {todos?.map((todo) => (
-          <Text key={todo._id} style={homeStyles.todoText}>
-            {todo.text} - {todo.isCompleted ? "Completed" : "Pending"}
-          </Text>
-        ))} */}
-        {/* Meme chose avec FlatList */}
-        {/* <FlatList
-          data={todos}
-          renderItem={({ item }) => (
-            <Text key={item._id} style={homeStyles.todoText}>
-              {item.text} - {item.isCompleted ? "Completed" : "Pending"}
-            </Text>
-          )}
-        /> */}
 
         {/* Version avec FlatList optimisée */}
         <FlatList
@@ -292,49 +246,7 @@ export default function Index() {
           //Pour ne pas afficher le scroll mais il existe (performance)
           // showsVerticalScrollIndicator={false}
         />
-
-        <Link href="/about">Visit la page about</Link>
-        <TouchableOpacity onPress={toggleDarkMode}>
-          <Text style={homeStyles.loadingText}>Toggle Dark Mode</Text>
-        </TouchableOpacity>
-        {/* <TouchableOpacity onPress={()=> addTodo({ text: "Titiiii !" })}>;
-      
-      <Text>Add a new TODO</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={()=> clearAllTodos()}>;
-      
-      <Text>Clear all the todos</Text>
-      </TouchableOpacity> */}
       </SafeAreaView>
     </LinearGradient>
   );
 }
-
-// const createStyles = (colors : ColorScheme ) => {
-//   const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       justifyContent: "center",
-//       alignItems: "center",
-//       backgroundColor: colors.bg,
-//     },
-//     content: {
-//       fontSize: 20,
-//       color: colors.text,
-//     },
-//   });
-//   return styles;
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "palegreen",
-//   },
-//   content: {
-//     fontSize: 20,
-//     color: "darkred",
-//   },
-// });
