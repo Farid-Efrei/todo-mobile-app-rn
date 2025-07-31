@@ -20,6 +20,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+
 type Todo = Doc<"todos">;
 
 export default function Index() {
@@ -32,6 +33,7 @@ export default function Index() {
   console.log("Todos:", todos);
 
   const toggleTodo = useMutation(api.todos.toggleTodo);
+  const deleteTodo = useMutation(api.todos.deleteTodo);
 
   const isLoading = todos === undefined;
 
@@ -45,6 +47,27 @@ export default function Index() {
       // Optionally, you can show an alert or a toast message to the user
     }
   };
+
+  const handleDeleteTodo = async (id: Id<"todos">) => {
+    Alert.alert("Supprimer la tâche", "Êtes-vous sûr de vouloir supprimer cette tâche ?", [
+      {
+        text: "Annuler",
+        style: "cancel",
+      },
+      {
+        text: "Supprimer",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteTodo({ todoId: id });
+          } catch (error) {
+            console.error("Erreur lors de la suppression de la tâche: ", error);
+            Alert.alert("Erreur", "Echec de la suppression de la tâche.");
+          }
+        },
+      },
+    ])
+  }
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -101,7 +124,7 @@ export default function Index() {
                 <Ionicons name="pencil" size={16} color="#fff" />
               </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}} activeOpacity={0.8}>
+            <TouchableOpacity onPress={() => {handleDeleteTodo(item._id)}} activeOpacity={0.8}>
               <LinearGradient
                 colors={colors.gradients.danger}
                 style={homeStyles.actionButton}
@@ -151,7 +174,7 @@ export default function Index() {
 
         {/* Version avec FlatList optimisée */}
         <FlatList
-          data={[]}
+          data={todos}
           renderItem={renderTodoItem}
           keyExtractor={(item) => item._id}
           style={homeStyles.todoList}
