@@ -1,6 +1,7 @@
 import { createSettingsStyles } from "@/assets/styles/settings.styles";
 import Preferences from "@/components/Preferences";
 import ProgressStats from "@/components/ProgressStats";
+import ResetZone from "@/components/ResetZone";
 import useTheme from "@/hooks/useTheme";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -9,10 +10,7 @@ import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const SettingsScreen = () => {
-
-  
-
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const settingsStyle = createSettingsStyles(colors);
 
   return (
@@ -31,7 +29,6 @@ const SettingsScreen = () => {
               <Ionicons name="settings" size={32} color={colors.text} />
             </LinearGradient>
             <Text style={settingsStyle.title}>Réglages</Text>
-
           </View>
         </View>
         {/* SETTINGS OPTIONS */}
@@ -41,10 +38,13 @@ const SettingsScreen = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* INFOS */}
-          <ProgressStats/>
+          <ProgressStats />
 
           {/* PREFERENCES */}
-          <Preferences/>
+          <Preferences />
+
+          {/* RESET ZONE */}
+          <ResetZone />
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
