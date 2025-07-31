@@ -1,9 +1,11 @@
 import { createSettingsStyles } from "@/assets/styles/settings.styles";
 import { api } from "@/convex/_generated/api";
 import useTheme from "@/hooks/useTheme";
+import { Ionicons } from "@expo/vector-icons";
 import { useMutation } from "convex/react";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 const ResetZone = () => {
   const { colors } = useTheme();
@@ -48,9 +50,31 @@ const ResetZone = () => {
     );
   };
   return (
-    <View>
-      <Text>ResetZone</Text>
-    </View>
+    <LinearGradient
+      colors={colors.gradients.surface}
+      style={settingsStyle.section}
+    >
+      <Text style={settingsStyle.sectionTitleDanger}>Réinitialisation</Text>
+
+      <TouchableOpacity
+        style={[settingsStyle.actionButton, { borderBottomWidth: 0 }]}
+        onPress={handleResetApp}
+        activeOpacity={0.7}
+      >
+        <View style={settingsStyle.actionLeft}>
+          <LinearGradient
+            colors={colors.gradients.danger}
+            style={settingsStyle.actionIcon}
+          >
+            <Ionicons name="trash" size={24} color="#ffffff" />
+          </LinearGradient>
+          <Text style={settingsStyle.actionTextDanger}>
+            Réinitialiser l&apos;Appli
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={24} color={colors.textMuted} />
+      </TouchableOpacity>
+    </LinearGradient>
   );
 };
 
