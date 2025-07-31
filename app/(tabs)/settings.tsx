@@ -35,7 +35,11 @@ const SettingsScreen = () => {
           </View>
         </View>
         {/* SETTINGS OPTIONS */}
-        <ScrollView>
+        <ScrollView
+          style={settingsStyle.scrollView}
+          contentContainerStyle={settingsStyle.content}
+          showsVerticalScrollIndicator={false}
+        >
           <ProgressStats/>
         </ScrollView>
       </SafeAreaView>
